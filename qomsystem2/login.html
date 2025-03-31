@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Login - Queen of Martyrs Mark Sheet System</title>
+      <link rel="stylesheet" href="login.css">
+      <link rel="icon" href="placeholder-logo.png" type="image/png">
+    </head>
+    <body>
+      <div class="login-container">
+        <div class="login-box">
+          <div class="login-header">
+            <img src="placeholder-logo.png" alt="School Logo" class="logo" onerror="this.style.display='none'">
+            <h2>Queen of Martyrs High School</h2>
+            <p>Mark Sheet & Report System Login</p>
+          </div>
+          <form id="login-form">
+            <div class="input-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" required>
+            </div>
+            <div class="input-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+            <p id="error-message" class="error-message"></p>
+          </form>
+           <p class="login-info">Demo Logins (Year <span id="login-year"></span>):<br> qom01 / qom01<span id="login-year-pw"></span> (S1), qom05 / qom05<span id="login-year-pw2"></span> (S5), etc.</p>
+        </div>
+      </div>
+      <script src="login.js"></script>
+    </body>
+    </html>

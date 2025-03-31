@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Queen of Martyrs High School Kiwologoma - Mark Sheet System</title>
+      <link rel="stylesheet" href="style.css">
+      <link rel="icon" href="placeholder-logo.png" type="image/png">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+      <script>
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+          window.location.href = 'login.html';
+        }
+      </script>
+
+      <div class="app-container">
+          <header class="school-header">
+            <img src="placeholder-logo.png" alt="School Logo" class="logo" onerror="this.style.display='none'">
+            <div class="header-text">
+                <h1>Queen of Martyrs High School Kiwologoma</h1>
+                <p>Mark Sheet and Report Card System</p>
+            </div>
+            <div class="header-actions">
+                 <span class="welcome-user">Welcome, <span id="logged-in-username">User</span>!</span>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-checkbox">
+                        <input type="checkbox" id="theme-checkbox" />
+                        <div class="slider round">
+                            <span class="icon light-icon">☀️</span>
+                            <span class="icon dark-icon">🌙</span>
+                        </div>
+                    </label>
+                </div>
+                <button id="logout-btn" class="btn btn-logout">Logout</button>
+            </div>
+          </header>
+
+          <nav class="main-nav">
+            <ul>
+              <li><a href="#dashboard" class="nav-link active" data-target="dashboard">Dashboard</a></li>
+              <li><a href="#marks-entry" class="nav-link" data-target="marks-entry">Marks Entry</a></li>
+              <li><a href="#report-generation" class="nav-link" data-target="report-generation">Report Generation</a></li>
+              <li><a href="#saved-marksheets" class="nav-link" data-target="saved-marksheets">Saved Marksheets</a></li>
+              <li><a href="#student-management" class="nav-link" data-target="student-management">Students</a></li>
+              <li><a href="#subject-management" class="nav-link" data-target="subject-management">Subjects</a></li>
+              <li><a href="#analysis" class="nav-link" data-target="analysis">Analysis</a></li>
+              <li><a href="#calendar" class="nav-link" data-target="calendar">Calendar</a></li>
+              <li><a href="#settings" class="nav-link" data-target="settings">Settings</a></li>
+              <li><a href="#help" class="nav-link" data-target="help">Help</a></li>
+            </ul>
+          </nav>
+
+          <main id="app-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section active">
+              <h2>Dashboard</h2>
+              <div class="dashboard-grid">
+                  <div class="stat-card">
+                      <h3>Total Students</h3>
+                      <p id="stat-total-students">--</p>
+                      <span class="stat-icon">🎓</span>
+                  </div>
+                   <div class="stat-card">
+                      <h3>Assigned Classes</h3>
+                      <p id="stat-total-classes">--</p>
+                      <span class="stat-icon">🏫</span>
+                  </div>
+                   <div class="stat-card">
+                      <h3>O-Level Subjects</h3>
+                      <p id="stat-olevel-subjects">--</p>
+                      <span class="stat-icon">📚</span>
+                  </div>
+                   <div class="stat-card">
+                      <h3>A-Level Subjects</h3>
+                      <p id="stat-alevel-subjects">--</p>
+                      <span class="stat-icon">📖</span>
+                  </div>
+                   <div class="stat-card">
+                      <h3>Teaching Staff</h3>
+                      <p id="stat-total-teachers">--</p>
+                      <span class="stat-icon">👩‍🏫</span>
+                  </div>
+              </div>
+              <div class="welcome-message card">
+                  <p>Welcome back, <span class="logged-in-username-inline">User</span>! Use the navigation menu to manage academic records for your assigned classes.</p>
+              </div>
+              <div class="card">
+                  <h3>Upcoming Events</h3>
+                  <ul id="dashboard-event-list">
+                      <li class="placeholder-text">Loading events...</li>
+                  </ul>
+              </div>
+            </section>
+
+            <!-- Marks Entry Section -->
+            <section id="marks-entry" class="content-section">
+              <h2>Marks Entry</h2>
+              <div class="form-filters card">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="me-level">Level:</label>
+                        <select id="me-level">
+                          <option value="">-- Select Level --</option>
+                          <option value="O-Level">O-Level</option>
+                          <option value="A-Level">A-Level</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="me-class">Class:</label>
+                        <select id="me-class">
+                          <option value="">-- Select Level First --</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="me-stream">Stream:</label>
+                        <select id="me-stream">
+                          <option value="">-- Select Class First --</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="me-term">Term:</label>
+                        <select id="me-term">
+                          <option value="Term 1">First Term</option>
+                          <option value="Term 2">Second Term</option>
+                          <option value="Term 3">Third Term</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="me-exam-type">Exam Type:</label>
+                        <select id="me-exam-type">
+                          <option value="BOT">BOT</option>
+                          <option value="Mid Term">Mid Term</option>
+                          <option value="AOT">AOT</option>
+                          <option value="Tests">Tests</option>
+                          <option value="Continuous">Continuous Assessments</option>
+                          <option value="End of Term">End of Term</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="me-subject">Subject:</label>
+                        <select id="me-subject">
+                          <option value="">-- Select Class First --</option>
+                          <option value="all">-- All Subjects --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-action">
+                    <button id="load-marksheet-btn" class="btn btn-primary">Load Marksheet</button>
+                </div>
+              </div>
+
+              <div id="marksheet-area" class="marksheet-container card">
+                <h3>Marksheet: <span id="marksheet-details">No Class Selected</span></h3>
+                <div id="marksheet-table-container" class="table-responsive">
+                  <p class="placeholder-text">Select filters and click "Load Marksheet" to view/enter marks.</p>
+                </div>
+                <div class="marksheet-actions action-buttons">
+                  <button id="save-marksheet-btn" class="btn btn-success">Save Marksheet</button>
+                  <button id="print-marksheet-btn" class="btn btn-info">Print Marksheet</button>
+                  <button id="download-csv-btn" class="btn btn-warning">Download CSV</button>
+                  <button id="generate-reports-class-btn" class="btn btn-secondary">Generate Reports for this Class</button>
+                </div>
+              </div>
+              <div class="utility-actions action-buttons card">
+                 <h3>Add New Student to Selected Class</h3>
+                 <p>Select Level, Class, and Stream above first.</p>
+                 <button id="add-student-to-class-btn" class="btn btn-primary">Add Student</button>
+              </div>
+            </section>
+
+            <!-- Report Generation Section -->
+            <section id="report-generation" class="content-section">
+              <h2>Report Generation</h2>
+              <div class="form-filters card">
+                 <div class="filter-row">
+                     <div class="filter-group">
+                         <label for="rg-level">Level:</label>
+                        <select id="rg-level">
+                          <option value="">-- Select Level --</option>
+                          <option value="O-Level">O-Level</option>
+                          <option value="A-Level">A-Level</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="rg-class">Class:</label>
+                        <select id="rg-class">
+                          <option value="">-- Select Level First --</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="rg-stream">Stream:</label>
+                        <select id="rg-stream">
+                          <option value="">-- Select Class First --</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="rg-term">Term:</label>
+                        <select id="rg-term">
+                          <option value="Term 1">First Term</option>
+                          <option value="Term 2">Second Term</option>
+                          <option value="Term 3">Third Term</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="rg-exam-type">Exam Type (for Header):</label>
+                        <select id="rg-exam-type">
+                          <option value="End of Term">End of Term</option>
+                          <option value="Mid Term">Mid Term</option>
+                          <option value="BOT">BOT</option>
+                          <option value="AOT">AOT</option>
+                          <option value="Overall Term">Overall Term</option>
+                        </select>
+                    </div>
+                     <div class="filter-group">
+                        <label for="rg-student">Student:</label>
+                        <select id="rg-student">
+                          <option value="all">-- All Students --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-action">
+                    <button id="view-report-btn" class="btn btn-primary">View Report(s)</button>
+                </div>
+              </div>
+
+              <div id="report-card-area" class="report-card-container">
+                <p class="placeholder-text">Select filters and click "View Report(s)" to generate.</p>
+              </div>
+               <div class="report-actions action-buttons card">
+                  <button id="print-report-btn" class="btn btn-info">Print Visible Report(s)</button>
+               </div>
+            </section>
+
+            <!-- Saved Marksheets Section -->
+            <section id="saved-marksheets" class="content-section">
+                <h2>Saved Marksheets (Entries)</h2>
+                <div class="card">
+                    <p>This section lists Class/Term/Exam combinations where marks have been entered. Click an entry to load the filters in the 'Marks Entry' section.</p>
+                    <div class="action-buttons">
+                        <button id="refresh-saved-list-btn" class="btn btn-secondary">Refresh List</button>
+                    </div>
+                    <ul id="saved-marksheets-list" class="saved-list">
+                        <li class="placeholder-text">No saved marksheet entries found or list not refreshed.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Student Management Section -->
+            <section id="student-management" class="content-section">
+              <h2>Student Management</h2>
+               <div class="card">
+                   <p>View students in your assigned classes. Add new students via the 'Marks Entry' section.</p>
+                   <div class="action-buttons">
+                       <button id="refresh-student-list-btn" class="btn btn-secondary">Refresh List</button>
+                   </div>
+                   <div id="student-list-container" class="table-responsive">
+                       <table class="data-table">
+                           <thead>
+                               <tr><th>ID</th><th>Name</th><th>Gender</th><th>Class</th><th>Stream</th><th>Actions</th></tr>
+                           </thead>
+                           <tbody id="student-list-body">
+                               <tr><td colspan="6" class="placeholder-text">Loading students...</td></tr>
+                           </tbody>
+                       </table>
+                   </div>
+               </div>
+            </section>
+
+            <!-- Subject Management Section -->
+            <section id="subject-management" class="content-section">
+              <h2>Subject Management</h2>
+               <div class="card">
+                   <p>Manage subjects offered by the school. (Admin function typically)</p>
+                    <div class="action-buttons">
+                       <button id="refresh-subject-list-btn" class="btn btn-secondary">Refresh Lists</button>
+                       <button id="add-subject-mgmt-btn" class="btn btn-primary admin-only">Add New Subject</button>
+                   </div>
+                   <div id="subject-list-container" class="subject-lists-grid">
+                       <div class="subject-list-card">
+                           <h4>O-Level Subjects</h4>
+                           <ul id="olevel-subject-list" class="subject-list"></ul>
+                       </div>
+                       <div class="subject-list-card">
+                           <h4>A-Level Arts Subjects</h4>
+                           <ul id="alevel-arts-subject-list" class="subject-list"></ul>
+                       </div>
+                       <div class="subject-list-card">
+                           <h4>A-Level Science Subjects</h4>
+                           <ul id="alevel-science-subject-list" class="subject-list"></ul>
+                       </div>
+                   </div>
+               </div>
+            </section>
+
+            <!-- System Analysis Section -->
+            <section id="analysis" class="content-section">
+              <h2>System Analysis</h2>
+               <div class="card">
+                   <p>Calculate and view performance analysis based on submitted marks across terms for assigned classes.</p>
+                   <div class="action-buttons">
+                        <button id="calculate-analysis-btn" class="btn btn-primary">Calculate Analysis</button>
+                   </div>
+                   <div id="analysis-content" class="analysis-layout">
+                       <div class="analysis-summary">
+                           <div class="analysis-block card chart-container">
+                             <h3>Performance Trends (Term Averages)</h3>
+                             <canvas id="performance-chart"></canvas>
+                             <p class="placeholder-text" id="chart-placeholder">Click 'Calculate Analysis' to generate chart.</p>
+                           </div>
+                           <div class="analysis-block card">
+                             <h3>Overall Stream Performance (%)</h3>
+                             <div id="stream-performance"><p class="placeholder-text">Click 'Calculate Analysis'.</p></div>
+                           </div>
+                       </div>
+                       <div class="analysis-details card">
+                           <h3>Per Class Performance Analysis</h3>
+                           <div id="per-class-analysis-container">
+                               <p class="placeholder-text">Click 'Calculate Analysis' to view class breakdowns.</p>
+                               <!-- Content generated by JS -->
+                           </div>
+                       </div>
+                       <div class="analysis-details card full-width"> <!-- Span full width -->
+                           <h3>Subject Analysis Per Class</h3>
+                           <div id="subject-analysis-container">
+                               <p class="placeholder-text">Click 'Calculate Analysis' to view subject breakdowns.</p>
+                               <!-- Content generated by JS -->
+                           </div>
+                       </div>
+                   </div>
+               </div>
+            </section>
+
+            <!-- Calendar Section -->
+            <section id="calendar" class="content-section">
+                <h2>Academic Calendar & Events</h2>
+                <div class="card">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button id="prev-month-btn">&lt;</button>
+                            <h3 id="month-year-display">Month Year</h3>
+                            <button id="next-month-btn">&gt;</button>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid">
+                            <!-- Calendar days generated by JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Academic Events</h3>
+                    <ul id="event-list" class="event-list">
+                        <li class="placeholder-text">No events found or add new events below.</li>
+                    </ul>
+                     <div class="add-event-form admin-only">
+                        <h4>Add New Event</h4>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <label for="event-date">Date:</label>
+                                <input type="date" id="event-date" required>
+                            </div>
+                            <div class="filter-group" style="flex-grow: 2;">
+                                <label for="event-description">Description:</label>
+                                <input type="text" id="event-description" placeholder="Event details" required>
+                            </div>
+                            <div class="filter-action">
+                                <button id="add-event-btn" class="btn btn-primary">Add Event</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section">
+              <h2>Settings</h2>
+               <div class="card">
+                   <p>Configure system grading scales.</p>
+                   <div class="setting-group">
+                     <label for="setting-grading-global">Global Grading Scale (Default/A-Level):</label>
+                     <textarea id="setting-grading-global" class="grading-textarea" rows="8" placeholder="Define GLOBAL scale (used for A-Level or as fallback). Format: GRADE, MIN, MAX, COMMENT"></textarea>
+                   </div>
+                    <div class="setting-group">
+                     <label for="setting-grading-olevel">O-Level Grading Scale Override:</label>
+                     <textarea id="setting-grading-olevel" class="grading-textarea" rows="8" placeholder="Define O-Level specific scale. Format: GRADE, MIN, MAX, COMMENT"></textarea>
+                   </div>
+
+                   <div class="setting-group">
+                       <label for="setting-override-target">Class/Stream Specific Override Target:</label>
+                       <select id="setting-override-target">
+                           <option value="">-- Select Class-Stream to Override --</option>
+                           <!-- Options populated by JS -->
+                       </select>
+                       <textarea id="setting-grading-specific" class="grading-textarea" rows="8" placeholder="Define scale for the selected Class-Stream above. Format: GRADE, MIN, MAX, COMMENT"></textarea>
+                       <small>Leave blank to use Level or Global scale for the selected target.</small>
+                   </div>
+
+                   <div class="action-buttons">
+                        <button id="save-settings-btn" class="btn btn-success admin-only">Save All Scales</button>
+                        <button id="load-settings-btn" class="btn btn-secondary">Load Saved Scales</button>
+                        <button id="reset-defaults-btn" class="btn btn-warning admin-only">Reset All to Defaults</button>
+                   </div>
+               </div>
+            </section>
+
+            <!-- Help Section -->
+            <section id="help" class="content-section">
+              <h2>Help & Instructions</h2>
+               <div class="card">
+                  <p>Find instructions and support information below.</p>
+                  <details class="help-details">
+                      <summary>How to Enter Marks</summary>
+                      <ol>
+                        <li>Navigate to 'Marks Entry'.</li>
+                        <li>Select Level, Class, Stream, Term, Exam Type from dropdowns (only your assigned classes will be available).</li>
+                        <li>Choose Subject or '-- All Subjects --'.</li>
+                        <li>Click 'Load Marksheet'.</li>
+                        <li>Enter marks (0-100).</li>
+                        <li>Click 'Save Marksheet'.</li>
+                      </ol>
+                  </details>
+                   <details class="help-details">
+                      <summary>How to Generate Reports</summary>
+                      <ol>
+                        <li>Navigate to 'Report Generation'.</li>
+                        <li>Select Level, Class, Stream, Term (only your assigned classes available).</li>
+                        <li>Select 'Exam Type (for Header)'.</li>
+                        <li>Choose Student or '-- All Students --'.</li>
+                        <li>Click 'View Report(s)'.</li>
+                        <li>Use 'Print Visible Report(s)'.</li>
+                      </ol>
+                  </details>
+                  <details class="help-details">
+                      <summary>System Analysis</summary>
+                       <ol>
+                           <li>Navigate to 'Analysis'.</li>
+                           <li>Click 'Calculate Analysis'.</li>
+                           <li>View stream performance, term trends, per-class student rankings, and per-class subject analysis for your assigned classes.</li>
+                       </ol>
+                   </details>
+                   <details class="help-details">
+                       <summary>Calendar & Events</summary>
+                       <ol>
+                           <li>Navigate to 'Calendar'.</li>
+                           <li>View the calendar and list of upcoming events.</li>
+                           <li class="admin-only">Admin: Use the form to add new events.</li>
+                       </ol>
+                   </details>
+                   <details class="help-details admin-only">
+                       <summary>Settings (Grading Scales - Admin)</summary>
+                       <ol>
+                           <li>Navigate to 'Settings'.</li>
+                           <li>Modify scales (Global, O-Level, Specific Class). Format: `GRADE, MIN, MAX, COMMENT`.</li>
+                           <li>To set a class-specific scale, select the Class-Stream, then enter the scale. Leave blank to remove override.</li>
+                           <li>Click 'Save All Scales'.</li>
+                           <li>'Load Saved Scales' reloads configurations.</li>
+                           <li>'Reset All to Defaults' restores original scales.</li>
+                           <li>Grading Priority: Class-Specific > Level (O-Level) > Global.</li>
+                       </ol>
+                   </details>
+                   <details class="help-details">
+                       <summary>Managing Students & Subjects</summary>
+                       <ol>
+                           <li>**Add Student:** Go to 'Marks Entry', select target Level, Class, Stream, then click 'Add Student'. Enter Name and Gender.</li>
+                           <li>**View/Delete Students:** Go to 'Students', click 'Refresh List', use 'Delete'.</li>
+                           <li class="admin-only">**Add Subject:** Go to 'Subjects', click 'Add New Subject'.</li>
+                            <li class="admin-only">**View/Delete Subjects:** Go to 'Subjects', click 'Refresh Lists', use 'Del'.</li>
+                       </ol>
+                   </details>
+               </div>
+            </section>
+          </main>
+
+          <footer>
+            <p>&copy; <span id="current-year"></span> Queen of Martyrs High School Kiwologoma. All Rights Reserved.</p>
+          </footer>
+      </div> <!-- End App Container -->
+
+      <!-- Report Card Template (Hidden by default, used by JS) -->
+      <div id="report-card-template" style="display: none;">
+        <div class="report-card printable-content">
+          <header class="report-header ugandan-style">
+             <img src="placeholder-logo.png" alt="School Logo" class="report-logo" onerror="this.style.display='none'">
+             <div class="report-header-text">
+                 <h2>QUEEN OF MARTYRS HIGH SCHOOL KIWOLOGOMA</h2>
+                 <p class="report-address">P.O. Box [Your Box Number], Kiwologoma, Uganda</p>
+                 <p class="report-motto">"Discipline and Determination"</p>
+                 <h3><span class="report-term"></span> <span class="report-exam-type"></span> REPORT - <span class="report-year"></span></h3>
+             </div>
+          </header>
+          <section class="student-info">
+            <div class="info-grid">
+                <p><strong>NAME:</strong> <span class="student-name uppercase"></span></p>
+                <p><strong>CLASS:</strong> <span class="student-class"></span></p>
+                <p><strong>STREAM:</strong> <span class="student-stream"></span></p>
+                <p><strong>STUDENT ID:</strong> <span class="student-id"></span></p>
+                <p><strong>GENDER:</strong> <span class="student-gender"></span></p> <!-- Added Gender -->
+                <p><strong>TERM:</strong> <span class="report-term-body"></span></p>
+                <p><strong>YEAR:</strong> <span class="report-year-body"></span></p>
+            </div>
+          </section>
+          <section class="academic-performance">
+            <h4>ACADEMIC PERFORMANCE</h4>
+            <div class="table-responsive">
+                <table class="marks-table report-style">
+                  <thead>
+                    <tr>
+                      <th>SUBJECT</th>
+                      <th>BOT</th>
+                      <th>MID</th>
+                      <th>AOT</th>
+                      <th>TESTS</th>
+                      <th>CONT.</th>
+                      <th>EOT</th>
+                      <th>AVG</th>
+                      <th>GRADE</th>
+                      <th>COMMENT</th>
+                    </tr>
+                  </thead>
+                  <tbody class="marks-table-body"></tbody>
+                </table>
+            </div>
+            <div class="report-summary">
+                <p><strong>Total Average:</strong> <span class="average-mark"></span></p>
+                <p><strong>Position in Class:</strong> <span class="class-position"></span> out of <span class="class-size"></span></p>
+            </div>
+          </section>
+          <section class="competency-analysis">
+             <h4>COMPETENCY ANALYSIS (NEW CURRICULUM)</h4>
+             <div class="competency-content">
+                 <p class="placeholder-text competency-placeholder">Generating analysis...</p>
+             </div>
+          </section>
+          <section class="comments">
+            <h4>TEACHER'S COMMENTS</h4>
+            <p><strong>Class Teacher:</strong> <span class="class-teacher-comment"></span></p>
+            <p><strong>Head Teacher:</strong> <span class="head-teacher-comment"></span></p>
+          </section>
+          <section class="promotion-status" style="display: none;">
+             <h4>TERM 3 PROMOTION STATUS</h4>
+             <div class="stamp-container">
+                <div class="stamp">
+                    <span class="promotion-text uppercase"></span>
+                </div>
+             </div>
+          </section>
+          <footer class="report-footer">
+            <div class="signature-area">
+              <p><strong>Class Teacher's Signature:</strong> __________________</p>
+              <p><strong>Date:</strong> <span class="report-date"></span></p>
+            </div>
+            <div class="signature-area">
+              <p><strong>Head Teacher's Signature:</strong> __________________</p>
+              <p><strong>Date:</strong> <span class="report-date"></span></p>
+            </div>
+            <div class="school-stamp-area">
+                <p>(Official School Stamp)</p>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="script.js"></script>
+    </body>
+    </html>
